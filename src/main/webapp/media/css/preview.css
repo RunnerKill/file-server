@@ -1,0 +1,56 @@
+.clearfix {
+	clear: both;
+}
+.title {
+	position: relative;
+	text-align: center;
+	margin: 30px 20px 0px 20px;
+	font-size: 26px;
+	padding-bottom: 40px;
+	border-bottom: 1px solid silver;
+}
+.title .time {
+	position: absolute;
+	right: 20px;
+	bottom: 10px;
+	font-size: 14px;
+	color: #666;
+}
+.main {
+	margin: 20px 50px 45px 50px;
+	text-align: center;
+}
+.main.none {
+	margin: 80px auto;
+	width: 600px;
+}
+.main>img {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+.left {
+	float: left;
+	width: 140px;
+}
+.right {
+	float: right;
+	width: 450px;
+	font-size: 20px;
+	line-height: 35px;
+	margin: 35px 0;
+	color: #666;
+}
+.right b {
+	color: red;
+}
+.iframe_hover {
+	position: absolute;
+	z-index: 99;
+	width: 100%;
+	top: 0;
+	left: 0;
+}
+.iframe_hover, .main>iframe {
+	min-height: 468px;
+}
