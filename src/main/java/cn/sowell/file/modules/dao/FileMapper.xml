@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.sowell.file.modules.dao.FileDao">
+	<!-- result map config -->
+	<resultMap id="FileResult" type="cn.sowell.file.modules.model.File">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="ext" column="ext" />
+		<result property="ftype" column="type" />
+		<result property="remarks" column="remarks" />
+		<result property="size" column="sizes" />
+		<result property="path" column="path" />
+		<result property="project" column="project" />
+		<result property="module" column="module" />
+		<result property="uploadTime" column="upload_time" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+		<discriminator javaType="String" column="type">
+			<case value="image" resultMap="cn.sowell.file.modules.dao.ImageDao.ImageResult">
+			</case>
+			<case value="word" resultMap="cn.sowell.file.modules.dao.WordDao.WordResult">
+			</case>
+			<case value="excel" resultMap="cn.sowell.file.modules.dao.ExcelDao.ExcelResult">
+			</case>
+		</discriminator>
+	</resultMap>
+    <!-- dynamic sql definition -->
+	<sql id="select-column">
+		select
+		t.id,
+		t.name,
+		t.ext,
+		t.type,
+		t.remarks,
+        t.sizes,
+        t.path,
+        t.project,
+        t.module,
+		t.upload_time,
+		t.create_time,
+		t.update_time,
+		i.width as image_width,
+		i.height as image_height,
+		i.orientation as image_orientation,
+		w.preview_path as word_preview_path,
+		w.version as word_version,
+		e.preview_path as excel_preview_path,
+		e.version as excel_version
+	</sql>
+	<sql id="from-table">
+		from t_file t
+		left join t_image i on t.id = i.id
+		left join t_word w on t.id = w.id
+		left join t_excel e on t.id = e.id
+	</sql>
+    <!-- interface methods -->
+	<select id="getOne" resultMap="FileResult" parameterType="String">
+        <include refid="select-column" />
+        <include refid="from-table" />
+        where t.id = #{id}
+    </select>
+    <select id="getListByIds" resultMap="FileResult">
+        <include refid="select-column" />
+        <include refid="from-table" />
+        where t.id in
+        <foreach item="item" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+	<insert id="insert" parameterType="File">
+		insert into t_file
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="ext != null">
+				ext,
+			</if>
+			<if test="ftype != null">
+				type,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="size != null">
+				sizes,
+			</if>
+			<if test="path != null">
+				path,
+			</if>
+			<if test="project != null">
+				project,
+			</if>
+			<if test="module != null">
+				module,
+			</if>
+			<if test="uploadTime != null">
+				upload_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="name != null">
+				#{name},
+			</if>
+			<if test="ext != null">
+				#{ext},
+			</if>
+			<if test="ftype != null">
+				#{ftype},
+			</if>
+			<if test="remarks != null">
+				#{remarks},
+			</if>
+			<if test="size != null">
+				#{size},
+			</if>
+			<if test="path != null">
+				#{path},
+			</if>
+			<if test="project != null">
+				#{project},
+			</if>
+			<if test="module != null">
+				#{module},
+			</if>
+			<if test="uploadTime != null">
+				#{uploadTime},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+		</trim>
+	</insert>
+    <insert id="insertMultiply">
+        insert into t_file (
+	        id,
+	        name,
+	        ext,
+	        type,
+	        remarks,
+	        sizes,
+	        path,
+	        project,
+	        module,
+	        upload_time,
+	        create_time,
+	        update_time
+	    ) values
+        <foreach collection="array" item="f" index="index" separator=",">
+        (
+            #{f.id},
+            #{f.name},
+            #{f.ext},
+            #{f.ftype},
+            #{f.remarks},
+            #{f.size},
+            #{f.path},
+            #{f.project},
+            #{f.module},
+            #{f.uploadTime},
+            #{f.createTime},
+            #{f.updateTime}
+        )
+        </foreach>
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete t.*,i.*,w.*,e.*
+        <include refid="from-table" />
+        where t.id = #{id}
+    </delete>
+    <delete id="deleteMultiply">
+        delete t.*,i.*,w.*,e.*
+        <include refid="from-table" />
+        where t.id in
+        <foreach item="item" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

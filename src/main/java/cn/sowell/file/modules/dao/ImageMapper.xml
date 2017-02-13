@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.sowell.file.modules.dao.ImageDao">
+	<!-- result map config -->
+	<resultMap id="ImageResult" type="cn.sowell.file.modules.model.Image" extends="cn.sowell.file.modules.dao.FileDao.FileResult">
+		<result property="width" column="image_width" />
+		<result property="height" column="image_height" />
+		<result property="orientation" column="image_orientation" />
+	</resultMap>
+	<insert id="insert" parameterType="Image">
+		insert into t_image
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="width != null">
+				width,
+			</if>
+			<if test="height != null">
+				height,
+			</if>
+			<if test="orientation != null">
+				orientation,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="width != null">
+				#{width},
+			</if>
+			<if test="height != null">
+				#{height},
+			</if>
+			<if test="orientation != null">
+				#{orientation},
+			</if>
+		</trim>
+	</insert>
+	
+</mapper>
